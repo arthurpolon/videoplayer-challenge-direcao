@@ -1,3 +1,4 @@
+import Video from 'components/Video/Video';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
@@ -10,7 +11,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <h1>NextJS</h1>
+        <Video />
       </main>
     </div>
   );
