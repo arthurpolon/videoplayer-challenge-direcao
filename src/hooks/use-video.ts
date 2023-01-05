@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 type TOptions = {
   setKeyboardEvents?: boolean;
+  fullscreenTarget?: HTMLElement | null;
 };
 
 const defaultOptions: TOptions = {
@@ -16,6 +17,8 @@ export const useVideo = (
     ...defaultOptions,
     ...optionsParam,
   };
+
+  const fullscreenTarget = options.fullscreenTarget || video;
 
   const [isPaused, setIsPaused] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -32,7 +35,7 @@ export const useVideo = (
     const noElementInFullscreen = document.fullscreenElement === null;
 
     if (noElementInFullscreen) {
-      video?.requestFullscreen();
+      fullscreenTarget?.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
@@ -108,7 +111,7 @@ export const useVideo = (
 
     video?.addEventListener('play', onPlay);
     video?.addEventListener('pause', onPause);
-    video?.addEventListener('fullscreenchange', onFullscreenChange);
+    fullscreenTarget?.addEventListener('fullscreenchange', onFullscreenChange);
     video?.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
     video?.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
 
@@ -119,7 +122,10 @@ export const useVideo = (
     return () => {
       video?.removeEventListener('play', onPlay);
       video?.removeEventListener('pause', onPause);
-      video?.removeEventListener('fullscreenchange', onFullscreenChange);
+      fullscreenTarget?.removeEventListener(
+        'fullscreenchange',
+        onFullscreenChange
+      );
       video?.removeEventListener(
         'enterpictureinpicture',
         onEnterPictureInPicture
