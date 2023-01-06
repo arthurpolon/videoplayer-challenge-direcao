@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type TOptions = {
   setKeyboardEvents?: boolean;
@@ -24,6 +24,10 @@ export const useVideo = (
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   const [isPictureInPicture, setIsPictureInPicture] = useState(false);
+  const [volumeState, setVolumeState] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+
+  const lastVolumeBeforeMute = useRef(0);
 
   const toggleFullscreen = () => {
     const fullscreenNotAvailable = document.fullscreenEnabled === false;
@@ -64,6 +68,41 @@ export const useVideo = (
   };
 
   const toggleTheaterMode = () => setIsTheaterMode((state) => !state);
+
+  const setVolume = (valueParam: number) => {
+    if (!video) return;
+
+    let value: number;
+
+    if (valueParam > 1) {
+      value = 1;
+    } else if (valueParam < 0) {
+      value = 0;
+    } else {
+      value = valueParam;
+    }
+
+    if (value > 0) {
+      video.muted = false;
+      setIsMuted(false);
+    }
+
+    video.volume = value;
+  };
+
+  const toggleMute = () => {
+    if (!video) return;
+
+    if (video.muted) {
+      video.muted = false;
+      setVolume(lastVolumeBeforeMute.current);
+    } else {
+      video.muted = true;
+
+      lastVolumeBeforeMute.current = video.volume;
+      setVolume(0);
+    }
+  };
 
   useEffect(() => {
     function onPlay() {
@@ -106,7 +145,17 @@ export const useVideo = (
         case 't':
           toggleTheaterMode();
           break;
+        case 'm':
+          toggleMute();
+          break;
       }
+    }
+
+    function onVolumeChange() {
+      if (!video) return;
+
+      setVolumeState(video.volume);
+      setIsMuted(video.volume === 0);
     }
 
     video?.addEventListener('play', onPlay);
@@ -114,6 +163,7 @@ export const useVideo = (
     fullscreenTarget?.addEventListener('fullscreenchange', onFullscreenChange);
     video?.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
     video?.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
+    video?.addEventListener('volumechange', onVolumeChange);
 
     if (options.setKeyboardEvents) {
       document.addEventListener('keydown', onKeyDown);
@@ -134,6 +184,7 @@ export const useVideo = (
         'leavepictureinpicture',
         onLeavePictureInPicture
       );
+      video?.removeEventListener('volumechange', onVolumeChange);
 
       if (options.setKeyboardEvents) {
         document.removeEventListener('keydown', onKeyDown);
@@ -150,5 +201,9 @@ export const useVideo = (
     isPictureInPicture,
     isTheaterMode,
     toggleTheaterMode,
+    volume: volumeState,
+    setVolume,
+    isMuted,
+    toggleMute,
   };
 };

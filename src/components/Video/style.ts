@@ -68,6 +68,8 @@ export const ControlsContainer = styled.div`
   .left,
   .right {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 1.6rem;
 
     padding: 1rem;
@@ -91,5 +93,28 @@ export const ControlButton = styled.button`
 
   &:hover {
     opacity: 1;
+  }
+`;
+
+export const VolumeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 8px;
+
+  &:hover,
+  &:focus-within {
+    .input-range {
+      width: unset;
+      transform: scaleX(1);
+    }
+  }
+
+  .input-range {
+    width: 0;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: width 150ms ease-in-out, transform 150ms ease-in-out;
   }
 `;

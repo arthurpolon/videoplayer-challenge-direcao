@@ -1,17 +1,16 @@
+import InputRange from './components/InputRange';
 import { useVideo } from 'hooks/use-video';
-import { MouseEventHandler, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { FullscreenIcon } from './images/fullscreen-icon';
 import { PictureInPictureIcon } from './images/picture-in-picture-icon';
 import { PlayPauseIcon } from './images/play-pause-icon';
 import TheaterModeIcon from './images/theater-mode-icon';
+import { VolumeIcon } from './images/volume-icon';
 import * as S from './style';
 
-const stopPropagation =
-  (callback: () => any): MouseEventHandler<HTMLButtonElement> =>
-  (event) => {
-    event.stopPropagation();
-    callback();
-  };
+const stopPropagation = (event: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
+  event.stopPropagation();
+};
 
 const Video = () => {
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
@@ -25,6 +24,10 @@ const Video = () => {
     togglePictureInPicture,
     toggleTheaterMode,
     isTheaterMode,
+    volume,
+    setVolume,
+    isMuted,
+    toggleMute,
   } = useVideo(videoRef, {
     setKeyboardEvents: true,
     fullscreenTarget: containerRef,
@@ -41,20 +44,33 @@ const Video = () => {
         }}
       >
         <S.ControlsContainer>
-          <div className="left">
-            <S.ControlButton onClick={stopPropagation(togglePlay)}>
+          <div className="left" onClick={stopPropagation}>
+            <S.ControlButton onClick={togglePlay}>
               <PlayPauseIcon state={isPaused ? 'play' : 'pause'} />
             </S.ControlButton>
+
+            <S.VolumeWrapper>
+              <S.ControlButton onClick={toggleMute}>
+                <VolumeIcon
+                  state={isMuted ? 'muted' : volume > 0.5 ? 'high' : 'low'}
+                />
+              </S.ControlButton>
+              <InputRange
+                className="input-range"
+                value={volume}
+                onChange={(value) => setVolume(value)}
+              />
+            </S.VolumeWrapper>
           </div>
 
-          <div className="right">
-            <S.ControlButton onClick={stopPropagation(togglePictureInPicture)}>
+          <div className="right" onClick={stopPropagation}>
+            <S.ControlButton onClick={togglePictureInPicture}>
               <PictureInPictureIcon />
             </S.ControlButton>
-            <S.ControlButton onClick={stopPropagation(toggleTheaterMode)}>
+            <S.ControlButton onClick={toggleTheaterMode}>
               <TheaterModeIcon state={isTheaterMode ? 'wide' : 'tall'} />
             </S.ControlButton>
-            <S.ControlButton onClick={stopPropagation(toggleFullscreen)}>
+            <S.ControlButton onClick={toggleFullscreen}>
               <FullscreenIcon state={isFullscreen ? 'close' : 'open'} />
             </S.ControlButton>
           </div>
