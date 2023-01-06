@@ -1,40 +1,9 @@
 import styled, { css } from 'styled-components';
 
-export const Container = styled.div<{ theaterMode?: boolean }>`
-  width: 75vw;
-
-  aspect-ratio: 16/9;
-
-  background-color: black;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  position: relative;
-
-  ${({ theaterMode }) =>
-    theaterMode &&
-    css`
-      width: 100vw;
-
-      max-height: 85vh;
-    `}
-`;
-
-export const Video = styled.video`
-  height: 100%;
-
-  &::-webkit-media-controls {
-    display: none !important;
-  }
-`;
-
 export const ControlsContainer = styled.div`
   position: absolute;
 
   bottom: 0;
-  top: 0;
   right: 0;
   left: 0;
 
@@ -49,10 +18,6 @@ export const ControlsContainer = styled.div`
   opacity: 0;
 
   transition: opacity 150ms ease-in-out;
-
-  &:hover {
-    opacity: 1;
-  }
 
   &::before {
     content: '';
@@ -73,6 +38,42 @@ export const ControlsContainer = styled.div`
     gap: 1.6rem;
 
     padding: 1rem;
+  }
+`;
+
+export const Container = styled.div<{ theaterMode?: boolean }>`
+  width: 75vw;
+
+  aspect-ratio: 16/9;
+
+  background-color: black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  &:hover {
+    ${ControlsContainer} {
+      opacity: 1;
+    }
+  }
+
+  ${({ theaterMode }) =>
+    theaterMode &&
+    css`
+      width: 100vw;
+
+      max-height: 85vh;
+    `}
+`;
+
+export const Video = styled.video`
+  height: 100%;
+
+  &::-webkit-media-controls {
+    display: none !important;
   }
 `;
 

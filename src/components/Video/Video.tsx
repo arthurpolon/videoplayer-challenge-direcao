@@ -46,8 +46,8 @@ const Video = () => {
           toggleFullscreen();
         }}
       >
-        <S.ControlsContainer>
-          <div className="left" onClick={stopPropagation}>
+        <S.ControlsContainer onClick={stopPropagation}>
+          <div className="left">
             <S.ControlButton onClick={togglePlay}>
               <PlayPauseIcon state={isPaused ? 'play' : 'pause'} />
             </S.ControlButton>
