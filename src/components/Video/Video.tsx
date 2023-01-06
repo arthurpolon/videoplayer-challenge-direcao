@@ -7,6 +7,7 @@ import { PlayPauseIcon } from './images/play-pause-icon';
 import TheaterModeIcon from './images/theater-mode-icon';
 import { VolumeIcon } from './images/volume-icon';
 import * as S from './style';
+import { formatSecondsToVideoTime } from 'utils/formatSecondsToVideoTime';
 
 const stopPropagation = (event: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
   event.stopPropagation();
@@ -28,6 +29,8 @@ const Video = () => {
     setVolume,
     isMuted,
     toggleMute,
+    currentTime,
+    totalDuration,
   } = useVideo(videoRef, {
     setKeyboardEvents: true,
     fullscreenTarget: containerRef,
@@ -61,6 +64,11 @@ const Video = () => {
                 onChange={(value) => setVolume(value)}
               />
             </S.VolumeWrapper>
+
+            <S.DurationWrapper>
+              {formatSecondsToVideoTime(currentTime)} /{' '}
+              {formatSecondsToVideoTime(totalDuration)}
+            </S.DurationWrapper>
           </div>
 
           <div className="right" onClick={stopPropagation}>

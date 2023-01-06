@@ -106,7 +106,7 @@ export const VolumeWrapper = styled.div`
   &:hover,
   &:focus-within {
     .input-range {
-      width: unset;
+      width: 100px;
       transform: scaleX(1);
     }
   }
@@ -117,4 +117,9 @@ export const VolumeWrapper = styled.div`
     transform: scaleX(0);
     transition: width 150ms ease-in-out, transform 150ms ease-in-out;
   }
+`;
+
+export const DurationWrapper = styled.div`
+  font-size: 1.8rem;
+  color: white;
 `;

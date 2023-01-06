@@ -34,6 +34,7 @@ const InputRange = (props: TInputRangeProps) => {
         min={0}
         max={1}
         step="any"
+        style={{ width: '100px' }}
       />
     </div>
   );

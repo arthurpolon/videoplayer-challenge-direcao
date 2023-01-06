@@ -26,6 +26,8 @@ export const useVideo = (
   const [isPictureInPicture, setIsPictureInPicture] = useState(false);
   const [volumeState, setVolumeState] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
 
   const lastVolumeBeforeMute = useRef(0);
 
@@ -105,6 +107,8 @@ export const useVideo = (
   };
 
   useEffect(() => {
+    setTotalDuration(video?.duration || 0);
+
     function onPlay() {
       setIsPaused(false);
     }
@@ -158,12 +162,22 @@ export const useVideo = (
       setIsMuted(video.volume === 0);
     }
 
+    function onTimeUpdate() {
+      setCurrentTime(Math.floor(video?.currentTime || 0));
+    }
+
+    function onLoadedData() {
+      setTotalDuration(video?.duration || 0);
+    }
+
     video?.addEventListener('play', onPlay);
     video?.addEventListener('pause', onPause);
     fullscreenTarget?.addEventListener('fullscreenchange', onFullscreenChange);
     video?.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
     video?.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
     video?.addEventListener('volumechange', onVolumeChange);
+    video?.addEventListener('timeupdate', onTimeUpdate);
+    video?.addEventListener('loadeddata', onLoadedData);
 
     if (options.setKeyboardEvents) {
       document.addEventListener('keydown', onKeyDown);
@@ -185,6 +199,8 @@ export const useVideo = (
         onLeavePictureInPicture
       );
       video?.removeEventListener('volumechange', onVolumeChange);
+      video?.removeEventListener('timeupdate', onTimeUpdate);
+      video?.removeEventListener('loadeddata', onLoadedData);
 
       if (options.setKeyboardEvents) {
         document.removeEventListener('keydown', onKeyDown);
@@ -205,5 +221,7 @@ export const useVideo = (
     setVolume,
     isMuted,
     toggleMute,
+    currentTime,
+    totalDuration,
   };
 };
