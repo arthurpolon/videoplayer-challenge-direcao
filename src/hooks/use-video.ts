@@ -106,6 +106,12 @@ export const useVideo = (
     }
   };
 
+  const skip = (amount: number) => {
+    if (!video) return;
+
+    video.currentTime += amount;
+  };
+
   useEffect(() => {
     setTotalDuration(video?.duration || 0);
 
@@ -151,6 +157,14 @@ export const useVideo = (
           break;
         case 'm':
           toggleMute();
+          break;
+        case 'arrowleft':
+        case 'j':
+          skip(-5);
+          break;
+        case 'arrowright':
+        case 'l':
+          skip(5);
           break;
       }
     }
@@ -223,5 +237,6 @@ export const useVideo = (
     toggleMute,
     currentTime,
     totalDuration,
+    skip,
   };
 };

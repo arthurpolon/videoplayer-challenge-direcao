@@ -9,6 +9,7 @@ import { VolumeIcon } from './images/volume-icon';
 import * as S from './style';
 import { formatSecondsToVideoTime } from 'utils/formatSecondsToVideoTime';
 import { useDebounceTimeout } from 'hooks/use-debounce-timeout';
+import ProgressBar from './components/ProgressBar/ProgressBar';
 
 const stopPropagation = (event: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
   event.stopPropagation();
@@ -65,44 +66,49 @@ const Video = () => {
         $isIdle={isIdle}
       >
         <S.ControlsContainer $isPaused={isPaused} onClick={stopPropagation}>
-          <div className="left">
-            <S.ControlButton onClick={togglePlay}>
-              <PlayPauseIcon state={isPaused ? 'play' : 'pause'} />
-            </S.ControlButton>
-
-            <S.VolumeWrapper>
-              <S.ControlButton onClick={toggleMute}>
-                <VolumeIcon
-                  state={isMuted ? 'muted' : volume > 0.5 ? 'high' : 'low'}
-                />
+          <ProgressBar videoRef={videoRef} />
+          <div className="bottom-controls">
+            <div className="left">
+              <S.ControlButton onClick={togglePlay}>
+                <PlayPauseIcon state={isPaused ? 'play' : 'pause'} />
               </S.ControlButton>
-              <InputRange
-                className="input-range"
-                value={volume}
-                onChange={(value) => setVolume(value)}
-              />
-            </S.VolumeWrapper>
 
-            <S.DurationWrapper>
-              {formatSecondsToVideoTime(currentTime)} /{' '}
-              {formatSecondsToVideoTime(totalDuration)}
-            </S.DurationWrapper>
-          </div>
+              <S.VolumeWrapper>
+                <S.ControlButton onClick={toggleMute}>
+                  <VolumeIcon
+                    state={isMuted ? 'muted' : volume > 0.5 ? 'high' : 'low'}
+                  />
+                </S.ControlButton>
+                <InputRange
+                  className="input-range"
+                  value={volume}
+                  onChange={(value) => setVolume(value)}
+                />
+              </S.VolumeWrapper>
 
-          <div className="right" onClick={stopPropagation}>
-            <S.ControlButton onClick={togglePictureInPicture}>
-              <PictureInPictureIcon />
-            </S.ControlButton>
-            <S.ControlButton onClick={toggleTheaterMode}>
-              <TheaterModeIcon state={isTheaterMode ? 'wide' : 'tall'} />
-            </S.ControlButton>
-            <S.ControlButton onClick={toggleFullscreen}>
-              <FullscreenIcon state={isFullscreen ? 'close' : 'open'} />
-            </S.ControlButton>
+              <S.DurationWrapper>
+                {formatSecondsToVideoTime(currentTime)} /{' '}
+                {formatSecondsToVideoTime(totalDuration)}
+              </S.DurationWrapper>
+            </div>
+
+            <div className="right">
+              <S.ControlButton onClick={togglePictureInPicture}>
+                <PictureInPictureIcon />
+              </S.ControlButton>
+              <S.ControlButton onClick={toggleTheaterMode}>
+                <TheaterModeIcon state={isTheaterMode ? 'wide' : 'tall'} />
+              </S.ControlButton>
+              <S.ControlButton onClick={toggleFullscreen}>
+                <FullscreenIcon state={isFullscreen ? 'close' : 'open'} />
+              </S.ControlButton>
+            </div>
           </div>
         </S.ControlsContainer>
         <S.Video
-          ref={(node) => setVideoRef(node)}
+          ref={(node) => {
+            setVideoRef(node);
+          }}
           controls={false}
           controlsList="nofullscreen"
           src="https://res.cloudinary.com/dyzcpwvl3/video/upload/v1672869486/videoplayback_250c953ff7.mp4"
