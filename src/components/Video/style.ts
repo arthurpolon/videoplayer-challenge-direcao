@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export const ControlsContainer = styled.div`
+export const ControlsContainer = styled.div<{ $isPaused?: boolean }>`
   position: absolute;
 
   bottom: 0;
@@ -15,7 +15,7 @@ export const ControlsContainer = styled.div`
 
   z-index: 100;
 
-  opacity: 0;
+  opacity: ${({ $isPaused }) => ($isPaused ? 1 : 0)};
 
   transition: opacity 150ms ease-in-out;
 
@@ -41,7 +41,10 @@ export const ControlsContainer = styled.div`
   }
 `;
 
-export const Container = styled.div<{ theaterMode?: boolean }>`
+export const Container = styled.div<{
+  $theaterMode?: boolean;
+  $isIdle?: boolean;
+}>`
   width: 75vw;
 
   aspect-ratio: 16/9;
@@ -54,14 +57,16 @@ export const Container = styled.div<{ theaterMode?: boolean }>`
 
   position: relative;
 
+  cursor: ${({ $isIdle }) => ($isIdle ? 'none' : 'auto')};
+
   &:hover {
     ${ControlsContainer} {
-      opacity: 1;
+      opacity: ${({ $isIdle }) => ($isIdle ? 0 : 1)};
     }
   }
 
-  ${({ theaterMode }) =>
-    theaterMode &&
+  ${({ $theaterMode }) =>
+    $theaterMode &&
     css`
       width: 100vw;
 

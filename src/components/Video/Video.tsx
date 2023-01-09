@@ -8,6 +8,7 @@ import TheaterModeIcon from './images/theater-mode-icon';
 import { VolumeIcon } from './images/volume-icon';
 import * as S from './style';
 import { formatSecondsToVideoTime } from 'utils/formatSecondsToVideoTime';
+import { useDebounceTimeout } from 'hooks/use-debounce-timeout';
 
 const stopPropagation = (event: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
   event.stopPropagation();
@@ -16,6 +17,7 @@ const stopPropagation = (event: SyntheticEvent<HTMLDivElement, MouseEvent>) => {
 const Video = () => {
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const [isIdle, setIsIdle] = useState(false);
 
   const {
     isPaused,
@@ -36,17 +38,33 @@ const Video = () => {
     fullscreenTarget: containerRef,
   });
 
+  const { start, clear } = useDebounceTimeout(() => {
+    if (isPaused === false) {
+      setIsIdle(true);
+    }
+  }, 3000);
+
   return (
     <>
       <S.Container
         ref={(node) => setContainerRef(node)}
-        theaterMode={isTheaterMode}
         onClick={togglePlay}
         onDoubleClick={() => {
           toggleFullscreen();
         }}
+        onMouseEnter={start}
+        onMouseLeave={() => {
+          setIsIdle(false);
+          clear();
+        }}
+        onMouseMove={() => {
+          setIsIdle(false);
+          start();
+        }}
+        $theaterMode={isTheaterMode}
+        $isIdle={isIdle}
       >
-        <S.ControlsContainer onClick={stopPropagation}>
+        <S.ControlsContainer $isPaused={isPaused} onClick={stopPropagation}>
           <div className="left">
             <S.ControlButton onClick={togglePlay}>
               <PlayPauseIcon state={isPaused ? 'play' : 'pause'} />
