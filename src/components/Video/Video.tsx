@@ -39,28 +39,33 @@ const Video = () => {
     fullscreenTarget: containerRef,
   });
 
-  const { start, clear } = useDebounceTimeout(() => {
-    if (isPaused === false) {
-      setIsIdle(true);
-    }
-  }, 3000);
+  const { start: startIdleTimeout, clear: clearIdleTimeout } =
+    useDebounceTimeout(() => setIsIdle(true), 3000);
 
   return (
     <>
       <S.Container
         ref={(node) => setContainerRef(node)}
-        onClick={togglePlay}
+        onClick={() => {
+          togglePlay();
+
+          if (isPaused) {
+            startIdleTimeout();
+          } else {
+            clearIdleTimeout();
+          }
+        }}
         onDoubleClick={() => {
           toggleFullscreen();
         }}
-        onMouseEnter={start}
+        onMouseEnter={startIdleTimeout}
         onMouseLeave={() => {
           setIsIdle(false);
-          clear();
+          clearIdleTimeout();
         }}
         onMouseMove={() => {
           setIsIdle(false);
-          start();
+          startIdleTimeout();
         }}
         $theaterMode={isTheaterMode}
         $isIdle={isIdle}
@@ -93,10 +98,16 @@ const Video = () => {
             </div>
 
             <div className="right">
-              <S.ControlButton onClick={togglePictureInPicture}>
+              <S.ControlButton
+                className="picture-in-picture"
+                onClick={togglePictureInPicture}
+              >
                 <PictureInPictureIcon />
               </S.ControlButton>
-              <S.ControlButton onClick={toggleTheaterMode}>
+              <S.ControlButton
+                className="theater-mode"
+                onClick={toggleTheaterMode}
+              >
                 <TheaterModeIcon state={isTheaterMode ? 'wide' : 'tall'} />
               </S.ControlButton>
               <S.ControlButton onClick={toggleFullscreen}>

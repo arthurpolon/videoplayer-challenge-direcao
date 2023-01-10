@@ -74,6 +74,10 @@ export const Container = styled.div<{
 
       max-height: 85vh;
     `}
+
+  @media screen and (max-width: 960px) {
+    width: 100vw;
+  }
 `;
 
 export const Video = styled.video`
@@ -102,6 +106,13 @@ export const ControlButton = styled.button`
   &:hover {
     opacity: 1;
   }
+
+  @media screen and (max-width: 960px) {
+    &.theater-mode,
+    &.picture-in-picture {
+      display: none;
+    }
+  }
 `;
 
 export const VolumeWrapper = styled.div`
@@ -124,6 +135,10 @@ export const VolumeWrapper = styled.div`
     transform-origin: left;
     transform: scaleX(0);
     transition: width 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+
+  @media screen and (max-width: 480px) {
+    display: none;
   }
 `;
 
