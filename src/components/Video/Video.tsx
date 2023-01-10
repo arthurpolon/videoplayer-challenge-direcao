@@ -43,8 +43,8 @@ const Video = () => {
     useDebounceTimeout(() => setIsIdle(true), 3000);
 
   return (
-    <>
-      <S.Container
+    <S.Container $theaterMode={isTheaterMode}>
+      <S.VideoWrapper
         ref={(node) => setContainerRef(node)}
         onClick={() => {
           togglePlay();
@@ -124,8 +124,8 @@ const Video = () => {
           controlsList="nofullscreen"
           src="https://res.cloudinary.com/dyzcpwvl3/video/upload/v1672869486/videoplayback_250c953ff7.mp4"
         ></S.Video>
-      </S.Container>
-    </>
+      </S.VideoWrapper>
+    </S.Container>
   );
 };
 

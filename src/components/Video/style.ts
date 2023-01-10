@@ -1,5 +1,13 @@
 import styled, { css } from 'styled-components';
 
+export const Container = styled.div<{ $theaterMode?: boolean }>`
+  padding: ${({ $theaterMode }) => ($theaterMode ? '0' : '20px 0 0 20px')};
+
+  @media screen and (max-width: 960px) {
+    padding: 0;
+  }
+`;
+
 export const ControlsContainer = styled.div<{ $isPaused?: boolean }>`
   position: absolute;
 
@@ -43,7 +51,7 @@ export const ControlsContainer = styled.div<{ $isPaused?: boolean }>`
   }
 `;
 
-export const Container = styled.div<{
+export const VideoWrapper = styled.div<{
   $theaterMode?: boolean;
   $isIdle?: boolean;
 }>`
@@ -89,8 +97,8 @@ export const Video = styled.video`
 `;
 
 export const ControlButton = styled.button`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 
   opacity: 0.85;
 
@@ -145,4 +153,8 @@ export const VolumeWrapper = styled.div`
 export const DurationWrapper = styled.div`
   font-size: 1.8rem;
   color: white;
+
+  @media screen and (max-width: 960px) {
+    font-size: 1.4rem;
+  }
 `;
