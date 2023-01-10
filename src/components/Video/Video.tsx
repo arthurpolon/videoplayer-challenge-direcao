@@ -122,7 +122,7 @@ const Video = () => {
           }}
           controls={false}
           controlsList="nofullscreen"
-          src="https://res.cloudinary.com/dyzcpwvl3/video/upload/v1672869486/videoplayback_250c953ff7.mp4"
+          src="https://res.cloudinary.com/dyzcpwvl3/video/upload/v1673378049/AVATAR_2__O_CAMINHO_DA_%C3%81GUA_SURPREENDE_OU_DECEPCIONA_gerbjd.mp4"
         ></S.Video>
       </S.VideoWrapper>
     </S.Container>
